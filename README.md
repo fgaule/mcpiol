@@ -6,6 +6,7 @@ A Model Context Protocol (MCP) tool for interacting with Invertir Online (IOL) A
 
 - Claude Desktop App for Mac
 - Python 3.8+
+- Pytest + pytest-cov (plugin)
 - IOL trading account
 - Environment variables setup with your IOL credentials
 
@@ -101,6 +102,27 @@ pytest tests/test_client.py --cov=client -v
    - Verify your .env file exists and has correct credentials
    - Check IOL API status
    - Ensure your IOL account is active
+   
+3. If running tests fails with `ModuleNotFoundError: No module named 'httpx'`:
+   - Make sure you're inside the virtual environment:
+     ```bash
+     uv venv
+     source .venv/bin/activate
+     ```
+   - Be sure to run:
+     ```bash
+     uv sync
+     ```
+     
+4. If `pytest` shows `unrecognized arguments: --cov=client`:
+   - Install the `pytest-cov` plugin:
+     ```bash
+     uv pip install pytest-cov
+     ```
+   - Then re-run the tests:
+     ```bash
+     pytest --cov=client
+     ```
 
 ## License
 
