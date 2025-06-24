@@ -109,10 +109,6 @@ pytest tests/test_client.py --cov=client -v
      uv venv
      source .venv/bin/activate
      ```
-   - Be sure to run:
-     ```bash
-     uv sync
-     ```
      
 4. If `pytest` shows `unrecognized arguments: --cov=client`:
    - Install the `pytest-cov` plugin:
