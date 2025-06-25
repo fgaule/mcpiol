@@ -1,3 +1,4 @@
+from typing import Optional
 from mcp.server.fastmcp import FastMCP
 import client
 
@@ -24,7 +25,7 @@ async def get_portfolio() -> str:
     """Get IOL (invertironline) investment portfolio"""
 
     data = client.get_user_portfolio()["activos"]
-    result = []
+    result: list[str] = []
     for asset in data:
         result.append(
             f"""Asset: {asset["titulo"]["simbolo"]}
@@ -48,7 +49,7 @@ Total Valued: {asset["valorizado"]}
 def get_past_week_performance(stock_symbol: str) -> str:
     """Get past week performance of a stock"""
     data = client.get_last_week_performance(stock_symbol)
-    result = []
+    result: list[str] = []
     for day in data:
         result.append(
             f"""Date: {day["fechaHora"]}
@@ -67,7 +68,7 @@ Total Traded: {day["montoOperado"]}
 
 @mcp.tool()
 async def get_operations(
-    start_date: str = None, end_date: str = None, status: str = None
+    start_date: Optional[str] = None, end_date: Optional[str] = None, status: Optional[str] = None
 ) -> str:
     """
     Get IOL (invertironline) account operations with optional filters
@@ -77,7 +78,7 @@ async def get_operations(
         status: Optional status ('pendientes', 'terminadas', 'canceladas')
     """
     data = client.get_account_operations(start_date, end_date, status)
-    result = []
+    result: list[str] = []
     for op in data:
         result.append(
             f"""Operation Number: {op.get("numero")}
@@ -125,7 +126,7 @@ async def get_account_status() -> str:
     """Get IOL (invertironline) account status and balances"""
     data = client.get_account_status()
 
-    accounts = []
+    accounts: list[str] = []
     for account in data["cuentas"]:
         accounts.append(
             f"""Account Number: {account.get("numero")}
@@ -140,7 +141,7 @@ Overdraft Margin: {account.get("margenDescubierto")}
 Status: {account.get("estado")}"""
         )
 
-    stats = []
+    stats: list[str] = []
     for stat in data["estadisticas"]:
         if stat.get("descripcion"):  # Only add non-empty statistics
             stats.append(
@@ -195,7 +196,7 @@ async def get_historical_data(symbol: str, start_date: str, end_date: str) -> st
     data = client.get_historical_data(
         symbol=symbol, start_date=start_date, end_date=end_date
     )
-    result = []
+    result: list[str] = []
     for day in data:
         result.append(
             f"""Date: {day["fechaHora"]}

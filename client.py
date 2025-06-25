@@ -1,4 +1,5 @@
 import os
+from typing import Dict, Any, List, Optional
 import httpx
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
@@ -9,8 +10,8 @@ load_dotenv()
 UA = "mcpiol/1.0"
 
 
-@cached(cache=TTLCache(maxsize=3, ttl=120))
-def get_auth_token():
+@cached(cache=TTLCache[None, str](maxsize=3, ttl=120))
+def get_auth_token() -> str:
     user = os.getenv("IOL_USER")
     password = os.getenv("IOL_PASS")
     if not user or not password:
@@ -25,7 +26,7 @@ def get_auth_token():
     return response.json().get("access_token")
 
 
-def get_profile_data():
+def get_profile_data() -> Dict[str, Any]:
     token = get_auth_token()
     url = "https://api.invertironline.com/api/v2/datos-perfil"
     headers = {"Authorization": f"Bearer {token}", "User-Agent": UA}
@@ -35,7 +36,7 @@ def get_profile_data():
     return response.json()
 
 
-def get_user_portfolio():
+def get_user_portfolio() -> Dict[str, Any]:
     token = get_auth_token()
     url = "https://api.invertironline.com/api/v2/portafolio/Argentina"
     headers = {"Authorization": f"Bearer {token}", "User-Agent": UA}
@@ -45,7 +46,7 @@ def get_user_portfolio():
     return response.json()
 
 
-def get_last_week_performance(symbol: str):
+def get_last_week_performance(symbol: str) -> List[Dict[str, Any]]:
     now = datetime.now()
     last_week = now - timedelta(days=7)
     now_iso = now.strftime("%Y-%m-%d")
@@ -59,8 +60,8 @@ def get_last_week_performance(symbol: str):
 
 
 def get_account_operations(
-    start_date: str = None, end_date: str = None, status: str = None
-):
+    start_date: Optional[str] = None, end_date: Optional[str] = None, status: Optional[str] = None
+) -> List[Dict[str, Any]]:
     """
     Get account operations with optional filters.
 
@@ -72,7 +73,7 @@ def get_account_operations(
     token = get_auth_token()
     url = "https://api.invertironline.com/api/v2/operaciones"
 
-    params = {}
+    params: Dict[str, str] = {}
     if start_date:
         params["fechaDesde"] = start_date
     if end_date:
@@ -87,7 +88,7 @@ def get_account_operations(
     return response.json()
 
 
-def get_operation_details(operation_number: int):
+def get_operation_details(operation_number: int) -> Dict[str, Any]:
     """
     Get detailed information about a specific operation.
 
@@ -103,7 +104,7 @@ def get_operation_details(operation_number: int):
     return response.json()
 
 
-def get_account_status():
+def get_account_status() -> Dict[str, Any]:
     """
     Get account status including balances and statistics
     """
@@ -116,7 +117,7 @@ def get_account_status():
     return response.json()
 
 
-def get_stock_quote(symbol: str, market: str = "bCBA"):
+def get_stock_quote(symbol: str, market: str = "bCBA") -> Dict[str, Any]:
     """
     Get current quote for a stock
 
@@ -134,8 +135,8 @@ def get_stock_quote(symbol: str, market: str = "bCBA"):
 
 
 def get_historical_data(
-    symbol, market="bCBA", start_date=None, end_date=None, adjusted=True
-):
+    symbol: str, market: str = "bCBA", start_date: Optional[str] = None, end_date: Optional[str] = None, adjusted: bool = True
+) -> List[Dict[str, Any]]:
     """
     Get historical price data for a specific symbol
 
