@@ -13,8 +13,12 @@ dependencies = [
 [tool.pytest.ini_options]
 pythonpath = ["."]
 
+[tool.pyright]
+strict = ["."]
+
 [dependency-groups]
 dev = [
     "pytest>=8.3.4",
-    "pytest-cov>=6.2.1"
+    "pytest-cov>=6.2.1",
+    "pyright>=1.1.0",
 ]
